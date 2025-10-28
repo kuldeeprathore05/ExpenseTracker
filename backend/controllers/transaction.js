@@ -5,7 +5,7 @@ import { Transaction } from "../models/transaction.js";
 export const getAllTransatcion = async (req, res) => {
   try { 
     const transactions = await Transaction.find({ user: req.user._id })
-      .sort({ date: -1 });  
+      .sort({ date: -1, createdAt: -1  });  
 
     res.json({ transactions });  
   } catch (error) {

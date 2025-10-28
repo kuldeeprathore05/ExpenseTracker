@@ -5,6 +5,7 @@ import ChartSection from './components/ChartSection';
 import ExpenseTable from './components/ExpenseTable'; 
 import Auth from './components/Auth';
 import Form from './components/Form';
+import Swal from 'sweetalert2';
 import { API_URL } from "./constants";
 export default function App() {
   const [user, setUser] = useState(null);
@@ -52,8 +53,7 @@ export default function App() {
         headers: { Authorization: `Bearer ${token}` },
       }); 
       if (!res.ok) throw new Error("Failed to fetch expenses");
-      const data = await res.json();
-      // console.log(data)
+      const data = await res.json(); 
       setStats(data); 
     } catch (err) {
       console.error("Error fetching expenses:", err);
@@ -79,23 +79,34 @@ export default function App() {
   };
 
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this transaction?");
-    if (!confirmDelete) return;
-
-    try {
-      const res = await fetch(`${API_URL}/transaction/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      }); 
-      if (!res.ok) throw new Error("Failed to delete transaction");
- 
-      setExpenses((prev) => prev.filter((exp) => exp._id !== id));
- 
-      fetchStats();
-    } catch (err) {
-      console.error("Error deleting transaction:", err);
-      alert("Failed to delete transaction. Please try again.");
-    }
+    Swal.fire({
+      title: 'Delete this expense?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const res = await fetch(`${API_URL}/transaction/${id}`, {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` },
+          }); 
+          if (!res.ok) throw new Error("Failed to delete transaction");
+    
+          setExpenses((prev) => prev.filter((exp) => exp._id !== id));
+    
+          fetchStats();
+        } catch (err) {
+          console.error("Error deleting transaction:", err);
+          alert("Failed to delete transaction. Please try again.");
+        }
+      }
+      else return 
+    });
+    
   };
 
 
@@ -139,7 +150,7 @@ export default function App() {
             onClick={openAddDialog}
             className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
           >
-            + Add Expense
+            + Add Transaction
           </button>
         </div>
         

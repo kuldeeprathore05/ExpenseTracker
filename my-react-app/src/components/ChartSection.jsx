@@ -21,10 +21,16 @@ export default function ChartSection({ stats }) {
   const hasIncomeData = incomeChartData.length > 0;
 
   const monthlyChartData = stats?.monthlyData
-    ? Object.entries(stats.monthlyData).map(([name, value]) => ({ name, value }))
+    ? Object.entries(stats.monthlyData).map(([month, values]) => ({
+        month,
+        income: values.income || 0,
+        expense: values.expense || 0,
+      }))
     : [];
 
-//   if (categoryChartData.length === 0) return null;
+  const hasMonthlyExpense = monthlyChartData.some(item => item.expense > 0);
+  const hasMonthlyIncome = monthlyChartData.some(item => item.income > 0);  
+ 
 
   return (
     <div className="grid  grid-cols-1 lg:grid-cols-2 gap-6 mb-8"> 
@@ -77,23 +83,40 @@ export default function ChartSection({ stats }) {
             </PieChart>
           </ResponsiveContainer>
         </div>
+      } 
+      {hasMonthlyExpense && 
+        <div className="bg-white rounded-xl shadow-md p-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">Expense vs Month</h2>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={monthlyChartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip formatter={(value) => `₹${value}`} />
+              <Legend />
+              <Bar dataKey="expense" fill="#ef4444" name="Expense" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       }
-
         
+      {hasMonthlyIncome && 
+        <div className="bg-white rounded-xl shadow-md p-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">Income vs Month</h2>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={monthlyChartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip formatter={(value) => `₹${value}`} />
+              <Legend />
+              <Bar dataKey="income" fill="#22c55e" name="Income" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      }
+     
 
-      {/* <div className="bg-white rounded-xl shadow-md p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Monthly Trends</h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={monthlyChartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="value" fill="#3b82f6" name="Amount" />
-          </BarChart>
-        </ResponsiveContainer>
-      </div> */}
     </div>
   );
 }
