@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import { User } from '../models/user.js';
 export const signIn = async(req,res)=>{
     try{
+        console.log('signin')
         const {email,password} = req.body
         if(!email||!password){
             return res.status(400).json({message:'Email or Password missing'})
@@ -35,6 +36,7 @@ export const signIn = async(req,res)=>{
 
 export const signUp = async(req,res)=>{
     try{
+        console.log('signup')
         const {name,email,password} = req.body
         console.log(name);
         console.log(email);

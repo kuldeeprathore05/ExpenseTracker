@@ -19,6 +19,7 @@ await connectDb();
 app.use('/api/auth',authRoutes);
 app.use('/api/transaction',transactionRoute);
 app.get('/',(req,res)=>{
+    console.log('running')
     res.json({message:'running'});
 })
 
