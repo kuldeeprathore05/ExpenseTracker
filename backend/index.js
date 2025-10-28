@@ -8,6 +8,13 @@ import dotenv from 'dotenv'
 dotenv.config()
 const app = express();
 app.use(cors());
+import cors from "cors";
+app.use(cors({
+  origin: "*", 
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
+
 app.use(express.json());
 await connectDb();
 app.use('/api/auth',authRoutes);
