@@ -9,6 +9,11 @@ A full-stack **Expense Tracker** application built with **React**, **Node.js**, 
 - Password = 123123
  
 ---
+## Delpoyed Links
+- Frontend(on vercel) = https://expense-tracker-bay-six.vercel.app/
+- Backend(on render)  = https://expensetracker-zg42.onrender.com
+
+ ---
 
 ## Features
 
