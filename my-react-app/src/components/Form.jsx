@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { API_URL, incomeCategories,expenseCategories } from "../constants";
-
+import toast,{Toaster} from "react-hot-toast";
 export default function Form({ token, existing, onClose, onSaved }) {
   const [form, setForm] = useState({
     title: "",
@@ -54,8 +54,11 @@ export default function Form({ token, existing, onClose, onSaved }) {
       console.log(data)
       if (!res.ok) setError(data.message || "Failed");
       else onSaved();
+      if(existing) toast.success("Transaction updated!");
+      else toast.success("Transaction added!");
     } catch {
       setError("Server error");
+      toast.error("Transaction failed!");
     } finally {
       setLoading(false);
     }

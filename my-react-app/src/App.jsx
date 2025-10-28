@@ -3,6 +3,7 @@ import Header from './components/Header';
 import StatCards from './components/StatCards';
 import ChartSection from './components/ChartSection';
 import ExpenseTable from './components/ExpenseTable'; 
+import toast, { Toaster } from 'react-hot-toast';
 import Auth from './components/Auth';
 import Form from './components/Form';
 import Swal from 'sweetalert2';
@@ -95,13 +96,12 @@ export default function App() {
             headers: { Authorization: `Bearer ${token}` },
           }); 
           if (!res.ok) throw new Error("Failed to delete transaction");
-    
+          toast.success("Transaction deleted!");
           setExpenses((prev) => prev.filter((exp) => exp._id !== id));
     
           fetchStats();
-        } catch (err) {
-          console.error("Error deleting transaction:", err);
-          alert("Failed to delete transaction. Please try again.");
+        } catch (err) { 
+          toast.error("Failed to delete transaction");
         }
       }
       else return 
