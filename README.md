@@ -7,6 +7,8 @@ A full-stack **Expense Tracker** application built with **React**, **Node.js**, 
 ## Test Credentials
 - Email = test@gmail.com
 - Password = 123123
+ 
+---
 
 ## Features
 
