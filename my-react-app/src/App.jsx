@@ -7,7 +7,8 @@ import toast, { Toaster } from 'react-hot-toast';
 import Auth from './components/Auth';
 import Form from './components/Form';
 import Swal from 'sweetalert2';
-import { API_URL } from "./constants";
+import { API_URL } from "./constants"; 
+import { LayoutDashboard, BarChart3, History } from 'lucide-react';
 export default function App() {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -16,6 +17,8 @@ export default function App() {
   const [showForm, setShowForm] = useState(false);
   const [editingExpense, setEditingExpense] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('dashboard');
+
   useEffect(() => {
     if (token) checkAuth();
   }, [token]);
@@ -128,6 +131,13 @@ export default function App() {
     fetchStats();
   };
 
+   const tabs = [
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'charts', label: 'Charts', icon: BarChart3 },
+    { id: 'history', label: 'History', icon: History },
+  ];
+
+
 
   if(!user){
     return(
@@ -139,37 +149,80 @@ export default function App() {
 
   
   return (
-    <div className="min-h-screen bg-gray-50"> 
+     <div className="min-h-screen bg-gray-50">
       <Header user={user} logout={logout} />
-      <main className={`pt-20 max-w-7xl mx-auto px-4 py-8 sm:px-6 transition-all duration-300 lg:px-8 ${
-  showForm ? 'blur-sm pointer-events-none select-none' : ''
-}`}>
-        <div className="flex justify-center items-center mb-6">
-          
-          <button
-            onClick={openAddDialog}
-            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
-          >
-            + Add Transaction
-          </button>
-        </div>
-        
-        <StatCards stats={stats} />
-        <ChartSection stats={stats} />
-         <ExpenseTable expenses={expenses} handleEdit={openEditDialog} handleDelete={handleDelete} />
-      </main>
-      {showForm && (
-          <div className=" inset-0  fixed top-16 bg-opacity-40 flex justify-center items-center z-50">
-            <div className="bg-white p-4 rounded shadow-lg w-full max-w-md">
-              <Form
-                token={token}
-                existing={editingExpense}
-                onClose={closeDialog}
-                onSaved={handleSaved}
+      <main
+        className={`w-full transition-all duration-300 ${
+    showForm ? 'blur-sm pointer-events-none select-none' : ''
+  }`}
+      >
+        <div className="w-full bg-white shadow-sm sticky top-16 z-10">
+            <nav className="flex  ">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex-1 flex items-center justify-center gap-2 px-6 py-4 text-sm font-medium transition-colors ${
+                      activeTab === tab.id
+                        ? 'border-b-2 border-blue-500 text-blue-600'
+                        : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Icon size={20} />
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
+        <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 mt-12">
+          {activeTab === 'dashboard' && (
+            <div className=" mt-12 ">
+              <div className="flex justify-center items-center mb-6">
+                <button
+                  onClick={openAddDialog}
+                  className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm"
+                >
+                  + Add Transaction
+                </button>
+              </div>
+              <StatCards stats={stats} />
+            </div>
+          )}
+
+          {activeTab === 'charts' && (
+            <div>
+              <ChartSection stats={stats} />
+            </div>
+          )}
+
+          {activeTab === 'history' && (
+            <div>
+              <ExpenseTable
+                expenses={expenses}
+                handleEdit={openEditDialog}
+                handleDelete={handleDelete}
               />
             </div>
+          )}
+        </div>
+
+        
+      </main>
+
+      {showForm && (
+        <div className="inset-0 fixed top-16 backdrop-blur-md bg-white/10 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <Form
+              existing={editingExpense}
+              onClose={closeDialog}
+              onSaved={handleSaved}
+            />
           </div>
-        )}
+        </div>
+      )}
     </div>
   );
 }
