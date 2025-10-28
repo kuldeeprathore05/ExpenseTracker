@@ -55,7 +55,7 @@ export default function Form({ token, existing, onClose, onSaved }) {
       if (!res.ok) setError(data.message || "Failed");
       else onSaved();
       if(existing) toast.success("Transaction updated!");
-      else toast.success("Transaction added!");
+      else if(res.ok) toast.success("Transaction added!");
     } catch {
       setError("Server error");
       toast.error("Transaction failed!");
@@ -67,7 +67,6 @@ export default function Form({ token, existing, onClose, onSaved }) {
   return (
     <div className="inset-0 bg-opacity-40 flex items-center justify-center p-3 z-50 backdrop-blur-sm">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-md transform transition-all">
-        {/* Header */}
         <div className="border-b border-gray-200 px-4 py-3">
           <h3 className="text-lg font-semibold text-gray-900">
             {existing ? "Edit Transaction" : "Add Transaction"}
@@ -147,7 +146,7 @@ export default function Form({ token, existing, onClose, onSaved }) {
                     name="type"
                     value={t}
                     checked={form.type === t}
-                    onChange={() => setForm({ ...form, type: t })}
+                    onChange={() => setForm({ ...form, type: t , category: t === "income" ? "Salary" : "Food",})}
                     className="hidden"
                   />
                   {t === "expense" ? "💸 Expense" : "💰 Income"}
@@ -155,8 +154,7 @@ export default function Form({ token, existing, onClose, onSaved }) {
               ))}
             </div>
           </div>
-
-          {/* Date */}
+ 
           <div>
             <label className="block font-medium text-gray-700 mb-1">
               Date <span className="text-red-500">*</span>
@@ -171,7 +169,6 @@ export default function Form({ token, existing, onClose, onSaved }) {
           </div>
 
            
-          {/* Error */}
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-md text-xs flex items-center gap-2">
               ⚠️ {error}
@@ -179,7 +176,6 @@ export default function Form({ token, existing, onClose, onSaved }) {
           )}
         </form>
 
-        {/* Footer */}
         <div className="border-t border-gray-200 px-4 py-3 bg-gray-50 rounded-b-xl flex gap-2">
           <button
             onClick={onClose}

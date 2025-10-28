@@ -216,6 +216,7 @@ export default function App() {
         <div className="inset-0 fixed top-16 backdrop-blur-md bg-white/10 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
             <Form
+              token = {token}
               existing={editingExpense}
               onClose={closeDialog}
               onSaved={handleSaved}

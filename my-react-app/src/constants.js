@@ -1,4 +1,6 @@
 export const API_URL = 'https://expensetracker-zg42.onrender.com/api'; 
+// export const API_URL = 'http://localhost:8000/api'; 
+
 export const incomeCategories = [
   'Salary',
   'Freelance',
