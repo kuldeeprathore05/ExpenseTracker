@@ -19,6 +19,8 @@ export default function Auth({ onAuth }) {
         body: JSON.stringify(mode === "signin" ? { email: form.email, password: form.password } : form),
       });
       const data = await res.json(); 
+      console.log(data)
+
       if (!res.ok) {
         setError(data.message || "Auth failed");
       } else {
@@ -26,6 +28,7 @@ export default function Auth({ onAuth }) {
         onAuth(data.user, data.token);
       }
     } catch (err) {
+      console.log(err)
       setError("Server error");
     } finally {
       setLoading(false);
